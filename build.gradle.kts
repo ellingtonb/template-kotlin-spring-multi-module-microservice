@@ -12,6 +12,10 @@ plugins {
 
 // Dependencies: Variables
 val kotlinVersion: String by extra
+val kotlinxCoroutinesVersion: String by extra
+val kotlinTestVersion: String by extra
+val kotlinLoggingVersion: String by extra
+val log4jVersion: String by extra
 val jarName: String by extra
 val groupName: String by extra
 val springKafkaVersion: String by extra
@@ -25,7 +29,13 @@ val postgresDriverVersion: String by extra
 val postgresR2dbcDriverVersion: String by extra
 val flywayVersion: String by extra
 val confluentVersion: String by extra
+val apacheAvroVersion: String by extra
+val mockkVersion: String by extra
+val wiremockVersion: String by extra
+val jacksonVersion: String by extra
+val h2Version: String by extra
 
+extra.set("log4j2.version", log4jVersion)
 extra.set("spring-kafka.version", springKafkaVersion)
 extra.set("kotlin.version", kotlinVersion)
 
@@ -82,8 +92,14 @@ subprojects {
         }
 
         dependencies {
+            // Kotlin
             dependency("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
             dependency("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion")
+
+            // Kotlin: Coroutines
+            dependency("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoroutinesVersion")
+            dependency("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:$kotlinxCoroutinesVersion")
+            dependency("org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:$kotlinxCoroutinesVersion")
 
             // Webservice
             dependency("org.springframework.boot:spring-boot-starter-webflux:$springVersion")
@@ -94,15 +110,28 @@ subprojects {
             dependency("org.postgresql:postgresql:$postgresDriverVersion")
             dependency("io.r2dbc:r2dbc-postgresql:$postgresR2dbcDriverVersion")
             dependency("org.flywaydb:flyway-core:$flywayVersion")
+            dependency("io.r2dbc:r2dbc-h2:$h2Version")
 
             // Kafka
+            dependency("org.apache.avro:avro:$apacheAvroVersion")
             dependency("io.confluent:kafka-schema-registry-client:$confluentVersion")
             dependency("io.confluent:kafka-avro-serializer:$confluentVersion")
             dependency("io.confluent:kafka-streams-avro-serde:$confluentVersion")
 
+            // Others
+            dependency("com.fasterxml.jackson.core:jackson-core:$jacksonVersion")
+            dependency("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
+            dependency("com.fasterxml.jackson.datatype:jackson-datatype-jdk8:$jacksonVersion")
+            dependency("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion")
+
             // Test
             dependency("org.springframework.boot:spring-boot-starter-test:$springVersion")
             dependency("io.projectreactor:reactor-test:$projectReactorVersion")
+            dependency("io.kotlintest:kotlintest-runner-junit5:$kotlinTestVersion")
+            dependency("io.kotlintest:kotlintest-extensions-spring:$kotlinTestVersion")
+            dependency("io.github.microutils:kotlin-logging:$kotlinLoggingVersion")
+            dependency("io.mockk:mockk:$mockkVersion")
+            dependency("com.github.tomakehurst:wiremock:$wiremockVersion")
         }
     }
 
