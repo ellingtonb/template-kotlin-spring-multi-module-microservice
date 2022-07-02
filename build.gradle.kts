@@ -8,6 +8,7 @@ plugins {
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     kotlin("jvm") version "1.6.21"
     kotlin("plugin.spring") version "1.6.21"
+    id("org.jlleitschuh.gradle.ktlint") version "10.3.0"
 }
 
 // Dependencies: Variables
@@ -15,6 +16,7 @@ val kotlinVersion: String by extra
 val kotlinxCoroutinesVersion: String by extra
 val kotlinTestVersion: String by extra
 val kotlinLoggingVersion: String by extra
+val ktLintVersion: String by ext
 val log4jVersion: String by extra
 val jarName: String by extra
 val groupName: String by extra
@@ -48,6 +50,7 @@ allprojects {
         plugin("kotlin")
         plugin("io.spring.dependency-management")
         plugin("kotlin-spring")
+        plugin("org.jlleitschuh.gradle.ktlint")
     }
 
     version = projectVersion
@@ -75,6 +78,10 @@ allprojects {
             freeCompilerArgs = listOf("-Xjsr305=strict")
             jvmTarget = javaVersion
         }
+    }
+
+    ktlint {
+        debug.set(false)
     }
 }
 
