@@ -36,8 +36,6 @@ spring:
     schemas: ${DB_SCHEMA}
 
   kafka:
-    consumer:
-      group-id: ${KAFKA_CONSUMER_GROUP}
     bootstrap-servers:
       - ${KAFKA_URL}
     properties:
@@ -47,6 +45,13 @@ spring:
       security.protocol: PLAINTEXT
       schema.registry.basic.auth.user.info: ""
       sasl.jaas.config: ""
+    consumer:
+      group-id: ${KAFKA_CONSUMER_GROUP}
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
 
 messaging:
   topic:
