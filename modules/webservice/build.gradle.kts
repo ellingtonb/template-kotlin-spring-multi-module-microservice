@@ -7,6 +7,7 @@ dependencies {
     implementation(project(":business"))
     implementation(project(":api"))
     implementation(project(":database"))
+    implementation(project(":messaging"))
 
     // Spring
     implementation("org.springframework.boot:spring-boot-starter-webflux")

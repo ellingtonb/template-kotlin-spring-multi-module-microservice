@@ -21,6 +21,8 @@ val log4jVersion: String by extra
 val jarName: String by extra
 val groupName: String by extra
 val springKafkaVersion: String by extra
+val kafkaVersion: String by extra
+val kafkaReactorVersion: String by extra
 val javaVersion: String by extra
 val springVersion: String by extra
 val projectVersion: String by extra
@@ -40,6 +42,7 @@ val h2Version: String by extra
 extra.set("log4j2.version", log4jVersion)
 extra.set("spring-kafka.version", springKafkaVersion)
 extra.set("kotlin.version", kotlinVersion)
+extra.set("kafka.version", kafkaVersion)
 
 // Project Configuration
 group = groupName
@@ -120,6 +123,8 @@ subprojects {
             dependency("io.r2dbc:r2dbc-h2:$h2Version")
 
             // Kafka
+            dependency("org.springframework.kafka:spring-kafka:$springVersion")
+            dependency("io.projectreactor.kafka:reactor-kafka:$kafkaReactorVersion")
             dependency("org.apache.avro:avro:$apacheAvroVersion")
             dependency("io.confluent:kafka-schema-registry-client:$confluentVersion")
             dependency("io.confluent:kafka-avro-serializer:$confluentVersion")
@@ -149,9 +154,22 @@ subprojects {
         // Kotlin
         implementation("org.jetbrains.kotlin:kotlin-reflect")
         implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+        implementation("io.github.microutils:kotlin-logging")
+
+        // Kotlin: Coroutines
+        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
+        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-slf4j")
+        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
 
         // Test
-        testImplementation("org.springframework.boot:spring-boot-starter-test")
         testImplementation("io.projectreactor:reactor-test")
+        testImplementation("io.mockk:mockk")
+        testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test")
+        testImplementation("io.kotlintest:kotlintest-runner-junit5")
+        testImplementation("io.kotlintest:kotlintest-extensions-spring")
+        testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-debug")
+        testImplementation("org.springframework.boot:spring-boot-starter-test") {
+            exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
+        }
     }
 }

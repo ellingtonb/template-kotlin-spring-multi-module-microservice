@@ -3,8 +3,14 @@ plugins {
 }
 
 dependencies {
+    // Internal
+    implementation(project(":business"))
+    implementation(project(":api"))
+
     // Spring
     implementation("org.springframework.kafka:spring-kafka")
+    implementation("org.springframework.boot:spring-boot-starter-webflux")
+    implementation("io.projectreactor.kafka:reactor-kafka")
 
     // Kafka
     implementation("org.apache.avro:avro")

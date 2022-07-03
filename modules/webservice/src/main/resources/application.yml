@@ -39,6 +39,8 @@ spring:
     bootstrap-servers:
       - ${KAFKA_URL}
     properties:
+      auto.register.schemas: true
+      specific.avro.reader: true
       basic.auth.credentials.source:
       sasl.mechanism: PLAIN
       schema.registry.url: ${KAFKA_SCHEMA_REGISTRY_URL}
@@ -47,6 +49,7 @@ spring:
       sasl.jaas.config: ""
     consumer:
       group-id: ${KAFKA_CONSUMER_GROUP}
+      auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
     producer:
