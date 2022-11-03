@@ -2,6 +2,8 @@ plugins {
     id("com.github.davidmc24.gradle.plugin.avro")
 }
 
+val awsSpringVersion: String by ext
+
 dependencies {
     // Internal
     implementation(project(":business"))
@@ -19,6 +21,11 @@ dependencies {
     implementation("io.confluent:kafka-streams-avro-serde") {
         exclude(group = "org.slf4j", module = "slf4j-log4j12")
     }
+
+    // AWS
+    implementation(platform("io.awspring.cloud:spring-cloud-aws-dependencies:$awsSpringVersion"))
+    implementation("io.awspring.cloud:spring-cloud-starter-aws")
+    implementation("io.awspring.cloud:spring-cloud-starter-aws-messaging")
 }
 
 avro {
@@ -27,5 +34,6 @@ avro {
     isGettersReturnOptional.set(false)
     outputCharacterEncoding.set("UTF-8")
     stringType.set("String")
+    templateDirectory.set(null as String?)
     isEnableDecimalLogicalType.set(true)
 }
