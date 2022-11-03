@@ -1,15 +1,9 @@
-server:
-  port: 8090
-
-management:
-  server.port: 8091
-
 logging:
   level:
-    io.r2dbc.postgresql.PARAM: DEBUG # for parameters
+    io.r2dbc.postgresql.PARAM: INFO # for parameters
     org:
       springframework:
-        r2dbc: DEBUG
+        r2dbc: INFO
   file:
     path: tmp/logs
     name: application.log

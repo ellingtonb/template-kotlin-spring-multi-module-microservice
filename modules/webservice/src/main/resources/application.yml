@@ -1,5 +1,8 @@
 server:
-  port: 8080
+  port: ${APP_PORT:8080}
+
+management:
+  server.port: ${MONITORING_PORT:8081}
 
 spring:
   jackson:
@@ -48,7 +51,6 @@ spring:
       schema.registry.basic.auth.user.info: ""
       sasl.jaas.config: ""
     consumer:
-      group-id: ${KAFKA_CONSUMER_GROUP}
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
@@ -56,11 +58,16 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
 
-messaging:
-  topic:
-    consumer:
-      user:
-        active: true
-        main-name: ellingtonb-queuing.user
-        retry-name: ellingtonb-queuing.user-retry
-        dlq-name: ellingtonb-queuing.user-dlq
+cloud:
+  aws:
+    region:
+      static: ${CLOUD_AWS_REGION_STATIC:us-east-1}
+    credentials:
+      instance-profile: ${CLOUD_AWS_CREDENTIALS_INSTANCE_PROFILE:false}
+      access-key: ${CLOUD_AWS_CREDENTIALS_ACCESS_KEY:disabled}
+      secret-key: ${CLOUD_AWS_CREDENTIALS_SECRET_KEY:disabled}
+    sqs:
+      endpoint: ${CLOUD_AWS_SQS_ENDPOINT:http://localhost:31526}
+      enabled: true
+      listener:
+        auto-startup: true
