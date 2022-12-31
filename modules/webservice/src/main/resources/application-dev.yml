@@ -1,9 +1,8 @@
 logging:
   level:
-    io.r2dbc.postgresql.PARAM: INFO # for parameters
+    io.r2dbc.postgresql.PARAM: ${LOGGING_R2DBC_PARAM_LEVEL:INFO}
     org:
       springframework:
-        r2dbc: INFO
+        r2dbc: ${LOGGING_R2DBC_LEVEL:INFO}
   file:
-    path: tmp/logs
-    name: application.log
+    name: ${LOGGING_FILE_NAME:application.log}

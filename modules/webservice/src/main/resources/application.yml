@@ -6,22 +6,13 @@ management:
 
 spring:
   jackson:
-    default-property-inclusion: non_null
+    default-property-inclusion: ${JACKSON_DEFAULT_PROPERTY_INCLUSION:non_null}
     deserialization:
-      fail_on_unknown_properties: false
+      fail_on_unknown_properties: ${JACKSON_DESERIALIZATION_FAIL_ON_UNKNOWN_PROPERTIES:false}
     serialization:
-      fail_on_empty_beans: false
-      write_dates_as_timestamps: false
-    property-naming-strategy: SNAKE_CASE
-
-  jpa:
-    open-in-view: false
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQL95Dialect
-        jdbc:
-          lob:
-            non_contextual_creation: 1
+      fail_on_empty_beans: ${JACKSON_SERIALIZATION_FAIL_ON_EMPTY_BEANS:false}
+      write_dates_as_timestamps: ${JACKSON_SERIALIZATION_WRITE_DATES_AS_TIMESTAMPS:false}
+    property-naming-strategy: ${JACKSON_PROPERTY_NAMING_STRATEGY:SNAKE_CASE}
 
   r2dbc:
     url: r2dbc:postgresql://${DB_HOST}/${DB_NAME}?schema=${DB_SCHEMA}
@@ -30,33 +21,32 @@ spring:
     name: ${DB_NAME}
 
   flyway:
-    enabled: true
+    enabled: ${FLYWAY_ENABLED:true}
     password: ${DB_PASS}
     user: ${DB_USER}
     url: jdbc:postgresql://${DB_HOST}/${DB_NAME}
-    baseline-version: 1
-    baseline-on-migrate: true
+    baseline-version: ${FLYWAY_BASELINE_VERSION:1}
+    baseline-on-migrate: ${FLYWAY_BASELINE_ON_MIGRATE:true}
     schemas: ${DB_SCHEMA}
 
   kafka:
     bootstrap-servers:
       - ${KAFKA_URL}
     properties:
-      auto.register.schemas: true
-      specific.avro.reader: true
-      basic.auth.credentials.source:
-      sasl.mechanism: PLAIN
+      auto.register.schemas: ${KAFKA_AUTO_REGISTER_SCHEMAS:true}
+      specific.avro.reader: ${KAFKA_SPECIFIC_AVRO_READER:true}
+      sasl.mechanism: ${KAFKA_SASL_MECHANISM:PLAIN}
       schema.registry.url: ${KAFKA_SCHEMA_REGISTRY_URL}
-      security.protocol: PLAINTEXT
-      schema.registry.basic.auth.user.info: ""
-      sasl.jaas.config: ""
+      security.protocol: ${KAFKA_SECURITY_PROTOCOL:PLAINTEXT}
+      schema.registry.basic.auth.user.info: ${KAFKA_SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO:""}
+      sasl.jaas.config: ${KAFKA_SASL_JAAS_CONFIG:""}
     consumer:
-      auto-offset-reset: earliest
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+      auto-offset-reset: ${KAFKA_CONSUMER_AUTO_OFFSET_RESET:earliest}
+      key-deserializer: ${KAFKA_CONSUMER_KEY_DESERIALIZER:org.apache.kafka.common.serialization.StringDeserializer}
+      value-deserializer: ${KAFKA_CONSUMER_VALUE_DESERIALIZER:io.confluent.kafka.serializers.KafkaAvroDeserializer}
     producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+      key-serializer: ${KAFKA_PRODUCER_KEY_SERIALIZER:org.apache.kafka.common.serialization.StringSerializer}
+      value-serializer: ${KAFKA_PRODUCER_VALUE_SERIALIZER:io.confluent.kafka.serializers.KafkaAvroSerializer}
 
 cloud:
   aws:
@@ -67,7 +57,7 @@ cloud:
       access-key: ${CLOUD_AWS_CREDENTIALS_ACCESS_KEY:disabled}
       secret-key: ${CLOUD_AWS_CREDENTIALS_SECRET_KEY:disabled}
     sqs:
-      endpoint: ${CLOUD_AWS_SQS_ENDPOINT:http://localhost:31526}
-      enabled: true
+      endpoint: ${CLOUD_AWS_SQS_ENDPOINT:http://localhost:4566}
+      enabled: ${CLOUD_AWS_SQS_ENABLED:true}
       listener:
-        auto-startup: true
+        auto-startup: ${CLOUD_AWS_SQS_LISTENER_AUTO_STARTUP:true}
