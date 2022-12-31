@@ -19,13 +19,23 @@ dependencies {
 
     // Spring
     implementation("org.springframework.boot:spring-boot-starter-webflux")
+    implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
+
+    // Open API
+    implementation("org.springdoc:springdoc-openapi-kotlin")
+    implementation("org.springdoc:springdoc-openapi-webflux-ui")
+
+    // Others
+    implementation("io.github.resilience4j:resilience4j-spring-boot2")
 
     // Jackson
     implementation("com.fasterxml.jackson.core:jackson-core")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jdk8")
-    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310") {
+        exclude(group = "org.slf4j", module = "slf4j-log4j12")
+    }
 }
 
 tasks {
@@ -36,7 +46,6 @@ tasks {
 
     named<BootJar>("bootJar") {
         enabled = true
-        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
         archiveFileName.set("$jarName-$projectVersion-bootJar.${archiveExtension.get()}")
     }
 }

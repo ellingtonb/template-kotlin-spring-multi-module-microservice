@@ -5,18 +5,12 @@ val kotlinVersion: String by extra
 val kotlinxCoroutinesVersion: String by extra
 val kotlinTestVersion: String by extra
 val kotlinLoggingVersion: String by extra
-val ktLintVersion: String by ext
-val log4jVersion: String by extra
 val jarName: String by extra
 val groupName: String by extra
 val springKafkaVersion: String by extra
-val kafkaVersion: String by extra
 val kafkaReactorVersion: String by extra
-val javaVersion: String by extra
 val springVersion: String by extra
 val projectVersion: String by extra
-val mainClassName: String by extra
-val mainModule: String by extra
 val projectReactorVersion: String by extra
 val postgresDriverVersion: String by extra
 val postgresR2dbcDriverVersion: String by extra
@@ -36,11 +30,18 @@ val kotlinReactorTestVersion: String by extra
 val disruptorVersion: String by extra
 val kotestVersion: String by extra
 val embeddedPostgresVersion: String by extra
+val jacksonModuleVersion: String by extra
+val testContainersVersion: String by extra
+val mockitoKotlinVersion: String by extra
+val mockitoInlineVersion: String by extra
+val flywayTestVersion: String by extra
+val springCloudStreamTestSupportVersion: String by extra
+val springKafkaTestVersion: String by extra
+val awsSpringVersion: String by extra
+val kotlinOpenApiVersion: String by extra
+val resilience4jSpringBoot2Version: String by extra
 
-extra.set("log4j2.version", log4jVersion)
-extra.set("spring-kafka.version", springKafkaVersion)
-extra.set("kotlin.version", kotlinVersion)
-extra.set("kafka.version", kafkaVersion)
+java.sourceCompatibility = JavaVersion.VERSION_11
 
 plugins {
     kotlin("jvm") version "1.6.21"
@@ -54,6 +55,11 @@ plugins {
     id("org.flywaydb.flyway") version "6.4.2" apply false
 
     id("org.jlleitschuh.gradle.ktlint") version "10.3.0"
+
+    id("jacoco")
+    id("org.sonarqube") version "3.2.0"
+
+    idea
 }
 
 allprojects {
@@ -67,6 +73,22 @@ allprojects {
         maven("https://packages.confluent.io/maven/")
         maven("https://repo.spring.io/milestone")
     }
+
+    tasks {
+        register<JacocoReport>("jacocoAggregateReport") {
+            dependsOn(subprojects.map { it.tasks.withType<Test>() })
+            dependsOn(subprojects.map { it.tasks.withType<JacocoReport>() })
+            additionalSourceDirs.setFrom(subprojects.map { it.the<SourceSetContainer>()["main"].allSource.srcDirs })
+            sourceDirectories.setFrom(subprojects.map { it.the<SourceSetContainer>()["main"].allSource.srcDirs })
+            classDirectories.setFrom(subprojects.map { it.the<SourceSetContainer>()["main"].output })
+            executionData.setFrom(project.fileTree(".") { include("**/build/jacoco/*.exec") })
+
+            reports {
+                xml.required.set(true)
+                html.required.set(true)
+            }
+        }
+    }
 }
 
 // Configuration only for sub-projects
@@ -77,6 +99,8 @@ subprojects {
         plugin("org.jetbrains.kotlin.plugin.spring")
         plugin("io.spring.dependency-management")
         plugin("org.jlleitschuh.gradle.ktlint")
+        plugin("org.sonarqube")
+        plugin("jacoco")
     }
 
     dependencyManagement {
@@ -109,6 +133,12 @@ subprojects {
             // Webservice
             dependency("org.springframework.boot:spring-boot-starter-webflux:$springVersion")
             dependency("org.springframework.boot:spring-boot-starter-actuator:$springVersion")
+            dependency("org.springframework.boot:spring-boot-starter-validation:$springVersion")
+
+            // AWS
+            dependency("io.awspring.cloud:spring-cloud-aws-dependencies:$awsSpringVersion")
+            dependency("io.awspring.cloud:spring-cloud-starter-aws:$awsSpringVersion")
+            dependency("io.awspring.cloud:spring-cloud-starter-aws-messaging:$awsSpringVersion")
 
             // Database
             dependency("org.springframework.boot:spring-boot-starter-data-r2dbc:$springVersion")
@@ -125,7 +155,12 @@ subprojects {
             dependency("io.confluent:kafka-avro-serializer:$confluentVersion")
             dependency("io.confluent:kafka-streams-avro-serde:$confluentVersion")
 
+            // Open API
+            dependency("org.springdoc:springdoc-openapi-kotlin:$kotlinOpenApiVersion")
+            dependency("org.springdoc:springdoc-openapi-webflux-ui:$kotlinOpenApiVersion")
+
             // Others
+            dependency("io.github.resilience4j:resilience4j-spring-boot2:$resilience4jSpringBoot2Version")
             dependency("com.lmax:disruptor:$disruptorVersion")
             dependency("com.fasterxml.jackson.core:jackson-core:$jacksonVersion")
             dependency("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
@@ -143,10 +178,30 @@ subprojects {
             dependency("io.kotest:kotest-assertions-core:$kotestVersion")
             dependency("io.kotest:kotest-property:$kotestVersion")
             dependency("io.github.microutils:kotlin-logging:$kotlinLoggingVersion")
+            dependency("org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlinxCoroutinesVersion")
+
+            // Test: Mock
             dependency("io.mockk:mockk:$mockkVersion")
             dependency("com.github.tomakehurst:wiremock:$wiremockVersion")
+            dependency("org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion")
+            dependency("org.mockito:mockito-inline:$mockitoInlineVersion")
+
+            // Test: Test Containers
+            dependency("org.testcontainers:testcontainers:$testContainersVersion")
+            dependency("org.testcontainers:postgresql:$testContainersVersion")
+            dependency("org.testcontainers:junit-jupiter:$testContainersVersion")
+            dependency("org.testcontainers:localstack:$testContainersVersion")
+            dependency("org.testcontainers:kafka:$testContainersVersion")
+            dependency("org.testcontainers:mockserver:$testContainersVersion")
+
+            // Test: Database
+            dependency("org.flywaydb.flyway-test-extensions:flyway-test:$flywayTestVersion")
+            dependency("org.flywaydb.flyway-test-extensions:flyway-spring-test:$flywayTestVersion")
             dependency("io.zonky.test:embedded-database-spring-test:$embeddedPostgresVersion")
-            dependency("org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlinxCoroutinesVersion")
+
+            // Test: Kafka
+            dependency("org.springframework.cloud:spring-cloud-stream-test-support:$springCloudStreamTestSupportVersion")
+            dependency("org.springframework.kafka:spring-kafka-test:$springKafkaTestVersion")
         }
     }
 
@@ -162,6 +217,7 @@ subprojects {
         implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
         // Kotlin
+        implementation(kotlin("stdlib-jdk8"))
         implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
         implementation("org.jetbrains.kotlin:kotlin-reflect")
         implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
@@ -199,6 +255,12 @@ subprojects {
         testImplementation("org.springframework.boot:spring-boot-starter-test") {
             exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
         }
+        testImplementation("org.testcontainers:testcontainers")
+        testImplementation("org.testcontainers:postgresql")
+        testImplementation("org.testcontainers:junit-jupiter")
+        testImplementation("org.testcontainers:localstack")
+        testImplementation("org.testcontainers:mockserver")
+        testImplementation("org.testcontainers:kafka")
     }
 
     tasks {
@@ -209,7 +271,7 @@ subprojects {
         withType<KotlinCompile> {
             kotlinOptions {
                 freeCompilerArgs = listOf("-Xjsr305=strict")
-                jvmTarget = javaVersion
+                jvmTarget = java.sourceCompatibility.toString()
             }
         }
 
@@ -219,6 +281,24 @@ subprojects {
                 freeCompilerArgs = listOf("-Xjsr305=strict", "-Xjvm-default=all")
             }
         }
+
+        withType<JacocoReport> {
+            afterEvaluate {
+                classDirectories.setFrom(
+                    files(
+                        classDirectories.files.map {
+                            fileTree(it).apply {
+                                exclude("**/config/**")
+                            }
+                        }
+                    )
+                )
+            }
+        }
+
+        /*kotlin.check {
+            dependsOn(jacocoTestCoverageVerification)
+        }*/
 
         ktlint {
             debug.set(false)

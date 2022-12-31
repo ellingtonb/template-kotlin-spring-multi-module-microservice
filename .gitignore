@@ -40,3 +40,6 @@ out/
 !example.env
 *.env
 *.env.*
+
+# Logging
+application.log
