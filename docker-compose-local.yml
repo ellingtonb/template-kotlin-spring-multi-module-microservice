@@ -1,0 +1,28 @@
+version: '3.9'
+
+services:
+  #DB
+  postgres:
+    container_name: template_kotlin_multi_module_postgres
+    image: postgres
+    deploy:
+      resources:
+        limits:
+          memory: 300M
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: template_kotlin_multi_module
+    ports:
+      - "5432:5432"
+
+  flyway:
+    image: flyway/flyway
+    container_name: template_kotlin_multi_module_flyway
+    restart: on-failure
+    command: -url=jdbc:postgresql://postgres:5432/template_kotlin_multi_module -baselineOnMigrate=true -user=postgres -password=postgres migrate
+    volumes:
+      - ./modules/r2dbc/src/main/resources/db/migration/:/flyway/sql
+      - ./modules/r2dbc/src/main/resources/db/config/:/flyway/conf
+    depends_on:
+      - postgres

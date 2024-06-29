@@ -38,8 +38,7 @@ out/
 
 ### Environment Variables ###
 !example.env
-*.env
-*.env.*
+.env
 
 # Logging
 application.log

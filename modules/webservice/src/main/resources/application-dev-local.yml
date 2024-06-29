@@ -1,0 +1,13 @@
+spring:
+  r2dbc:
+    url: r2dbc:postgresql://${DB_HOST:localhost:5432}/${DB_NAME:template-kotlin-multi-module}
+    username: ${DB_USER:postgres}
+    password: ${DB_PASS:postgres}
+
+  flyway:
+    enabled: ${FLYWAY_ENABLED:true}
+    user: ${DB_USER:postgres}
+    password: ${DB_PASS:postgres}
+    url: jdbc:postgresql://${DB_HOST:localhost}/${DB_NAME:public}
+    baseline-version: ${FLYWAY_BASELINE_VERSION:1}
+    baseline-on-migrate: ${FLYWAY_BASELINE_ON_MIGRATE:true}
