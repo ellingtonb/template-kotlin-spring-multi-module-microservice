@@ -1,0 +1,50 @@
+spring:
+  r2dbc:
+    url: r2dbc:postgresql://${DB_HOST:localhost}/${DB_NAME:public}?schema=${DB_SCHEMA:public}
+    username: ${DB_USER:postgres}
+    password: ${DB_PASS:postgres}
+    name: ${DB_NAME:public}
+
+  flyway:
+    enabled: ${FLYWAY_ENABLED:true}
+    user: ${DB_USER:postgres}
+    password: ${DB_PASS:postgres}
+    url: jdbc:postgresql://${DB_HOST:localhost}/${DB_NAME:public}
+    baseline-version: ${FLYWAY_BASELINE_VERSION:1}
+    baseline-on-migrate: ${FLYWAY_BASELINE_ON_MIGRATE:true}
+    schemas: ${DB_SCHEMA:public}
+
+  kafka:
+    bootstrap-servers:
+      - ${KAFKA_URL:localhost:9092}
+    properties:
+      auto.register.schemas: ${KAFKA_AUTO_REGISTER_SCHEMAS:true}
+      specific.avro.reader: ${KAFKA_SPECIFIC_AVRO_READER:true}
+      sasl.mechanism: ${KAFKA_SASL_MECHANISM:PLAIN}
+      schema.registry.url: ${KAFKA_SCHEMA_REGISTRY_URL}
+      security.protocol: ${KAFKA_SECURITY_PROTOCOL:PLAINTEXT}
+      schema.registry.basic.auth.user.info: ${KAFKA_SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO:""}
+      sasl.jaas.config: ${KAFKA_SASL_JAAS_CONFIG:""}
+    consumer:
+      auto-offset-reset: ${KAFKA_CONSUMER_AUTO_OFFSET_RESET:earliest}
+      key-deserializer: ${KAFKA_CONSUMER_KEY_DESERIALIZER:org.apache.kafka.common.serialization.StringDeserializer}
+      value-deserializer: ${KAFKA_CONSUMER_VALUE_DESERIALIZER:io.confluent.kafka.serializers.KafkaAvroDeserializer}
+    producer:
+      key-serializer: ${KAFKA_PRODUCER_KEY_SERIALIZER:org.apache.kafka.common.serialization.StringSerializer}
+      value-serializer: ${KAFKA_PRODUCER_VALUE_SERIALIZER:io.confluent.kafka.serializers.KafkaAvroSerializer}
+    streams:
+      auto-startup: false
+
+cloud:
+  aws:
+    region:
+      static: ${CLOUD_AWS_REGION_STATIC:us-east-1}
+    credentials:
+      instance-profile: ${CLOUD_AWS_CREDENTIALS_INSTANCE_PROFILE:false}
+      access-key: ${CLOUD_AWS_CREDENTIALS_ACCESS_KEY:disabled}
+      secret-key: ${CLOUD_AWS_CREDENTIALS_SECRET_KEY:disabled}
+    sqs:
+      endpoint: ${CLOUD_AWS_SQS_ENDPOINT:http://localhost:4566}
+      enabled: ${CLOUD_AWS_SQS_ENABLED:true}
+      listener:
+        auto-startup: ${CLOUD_AWS_SQS_LISTENER_AUTO_STARTUP:true}
