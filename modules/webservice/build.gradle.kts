@@ -26,9 +26,6 @@ dependencies {
     implementation("org.springdoc:springdoc-openapi-kotlin")
     implementation("org.springdoc:springdoc-openapi-webflux-ui")
 
-    // Others
-    implementation("io.github.resilience4j:resilience4j-spring-boot2")
-
     // Jackson
     implementation("com.fasterxml.jackson.core:jackson-core")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")

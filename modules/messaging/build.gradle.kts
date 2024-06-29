@@ -10,7 +10,6 @@ dependencies {
     // Spring
     implementation("org.springframework.kafka:spring-kafka")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
-    implementation("io.projectreactor.kafka:reactor-kafka")
 
     // Jackson
     implementation("com.fasterxml.jackson.core:jackson-databind")
@@ -21,7 +20,6 @@ dependencies {
     }
 
     // Kafka
-    implementation("org.apache.avro:avro")
     implementation("io.confluent:kafka-schema-registry-client")
     implementation("io.confluent:kafka-avro-serializer")
     implementation("io.confluent:kafka-streams-avro-serde") {
@@ -34,8 +32,9 @@ dependencies {
     implementation("io.awspring.cloud:spring-cloud-starter-aws-messaging")
 
     // Test
-    testImplementation("org.springframework.cloud:spring-cloud-stream-test-support")
+    testImplementation("org.testcontainers:testcontainers")
     testImplementation("org.springframework.kafka:spring-kafka-test")
+    testImplementation("org.testcontainers:kafka")
 }
 
 avro {
