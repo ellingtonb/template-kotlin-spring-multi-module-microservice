@@ -11,6 +11,7 @@ val kotlinLoggingVersion: String by extra
 val springKafkaVersion: String by extra
 val springVersion: String by extra
 val postgresDriverVersion: String by extra
+val postgresR2dbcDriverVersion: String by extra
 val flywayVersion: String by extra
 val confluentVersion: String by extra
 val mockkVersion: String by extra
@@ -144,6 +145,7 @@ subprojects {
             // Database
             dependency("org.springframework.boot:spring-boot-starter-data-r2dbc:$springVersion")
             dependency("org.postgresql:postgresql:$postgresDriverVersion")
+            dependency("io.r2dbc:r2dbc-postgresql:$postgresR2dbcDriverVersion")
             dependency("org.flywaydb:flyway-core:$flywayVersion")
             dependency("io.r2dbc:r2dbc-h2:$h2Version")
 
@@ -187,6 +189,7 @@ subprojects {
             // Test: Test Containers
             dependency("org.testcontainers:testcontainers-bom:$testContainersVersion")
             dependency("org.testcontainers:testcontainers:$testContainersVersion")
+            dependency("org.testcontainers:r2dbc:$testContainersVersion")
             dependency("org.testcontainers:postgresql:$testContainersVersion")
             dependency("org.testcontainers:junit-jupiter:$testContainersVersion")
             dependency("org.testcontainers:localstack:$testContainersVersion")
@@ -271,12 +274,12 @@ subprojects {
                     strictly(zookeeperVersion)
                 }
             }
-            implementation("org.bouncycastle:bcprov-jdk18on"){
+            implementation("org.bouncycastle:bcprov-jdk18on") {
                 version {
                     strictly(bcprovVersion)
                 }
             }
-            implementation("org.bouncycastle:bcpkix-jdk18on"){
+            implementation("org.bouncycastle:bcpkix-jdk18on") {
                 version {
                     strictly(bcprovVersion)
                 }

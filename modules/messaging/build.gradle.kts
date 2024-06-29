@@ -27,9 +27,8 @@ dependencies {
     }
 
     // AWS
-    implementation(platform("io.awspring.cloud:spring-cloud-aws-dependencies"))
-    implementation("io.awspring.cloud:spring-cloud-starter-aws")
-    implementation("io.awspring.cloud:spring-cloud-starter-aws-messaging")
+    implementation("com.amazonaws:aws-java-sdk-s3")
+    implementation("com.amazonaws:aws-java-sdk-sts")
 
     // Test
     testImplementation("org.testcontainers:testcontainers")
